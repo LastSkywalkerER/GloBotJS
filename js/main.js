@@ -9,6 +9,7 @@ function getRandomInt(max) {
 }
 
 function checkInput(inputNumber) {
+  
   if (!isNumber(inputNumber) || inputNumber === '-0' || inputNumber === '+0') {
     if (inputNumber === null) {
       alert('Игра окончена');
@@ -16,13 +17,15 @@ function checkInput(inputNumber) {
     }
     inputNumber = checkInput(prompt('Введи число!'));
   }
+  
   return inputNumber;
 }
 
-function start() {
-  let start = prompt('Угадай число от 1 до ' + maxGameValue);
-  let end = checkInput(start);
-  console.log(end);
+function start(maxGameValue) {
+
+  let start = prompt('Угадай число от 1 до ' + maxGameValue),
+      end = checkInput(start);
+
   if (end !== false) {
     return parseInt(end);
   }
@@ -31,28 +34,39 @@ function start() {
   }
 }
 
-function GloBotJS(){
+function checkRequest(botNumber, userNumber, maxGameValue, tryCount){
 
-  if (botNumber > userNumber) {
-    alert('Загаданное число больше');
-    userNumber = start();
+  if (tryCount === 1) return 'endTryes';
+
+  if (botNumber < userNumber) {
+    alert('Загаданное число меньше, осталось попыток ' + --tryCount);
+    userNumber = start(maxGameValue);
     if (!userNumber) return false;
-    return GloBotJS();
-  } else if (botNumber < userNumber) {
-    alert('Загаданное число меньше');
-    userNumber = start();
+    return checkRequest(botNumber, userNumber, maxGameValue, tryCount);
+  } else if (botNumber > userNumber) {
+    alert('Загаданное число больше, осталось попыток ' + --tryCount);
+    userNumber = start(maxGameValue);
     if (!userNumber) return false;
-    return GloBotJS();
+    return checkRequest(botNumber, userNumber, maxGameValue, tryCount);
   }
   
   return true;
 }
 
-let maxGameValue = 100;
+function theGame() {
 
-let botNumber = getRandomInt(maxGameValue + 1);
-console.log(botNumber);
+let maxGameValue = 100,
+    tryCount = 10,
+    botNumber = getRandomInt(maxGameValue + 1),
+    userNumber = start(maxGameValue),
+    gameCore = checkRequest(botNumber, userNumber, maxGameValue, tryCount);
 
-let userNumber = start();
+if (userNumber !== false && gameCore === true) {
+  if (confirm('Поздравляю, Вы угадали!!! Хотели бы сыграть еще?')) theGame();
+} else if (gameCore === 'endTryes') {
+  if (confirm('Попытки закончились, хотите сыграть еще?')) theGame();
+}
 
-if (userNumber !== false && GloBotJS()) alert('Поздравляю, Вы угадали!!!');
+}
+
+theGame();
