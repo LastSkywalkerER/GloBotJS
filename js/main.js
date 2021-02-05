@@ -21,7 +21,9 @@ function checkInput(inputNumber) {
   return inputNumber;
 }
 
-function start(maxGameValue) {
+function theGame() {
+
+function start() {
 
   let start = prompt('Угадай число от 1 до ' + maxGameValue),
       end = checkInput(start);
@@ -34,7 +36,7 @@ function start(maxGameValue) {
   }
 }
 
-function checkRequest(botNumber, userNumber, maxGameValue, tryCount){
+function checkRequest(){
 
   if (tryCount === 1) return 'endTryes';
 
@@ -53,13 +55,13 @@ function checkRequest(botNumber, userNumber, maxGameValue, tryCount){
   return true;
 }
 
-function theGame() {
-
 let maxGameValue = 100,
     tryCount = 10,
     botNumber = getRandomInt(maxGameValue + 1),
-    userNumber = start(maxGameValue),
-    gameCore = checkRequest(botNumber, userNumber, maxGameValue, tryCount);
+    userNumber = start(),
+    gameCore = false;
+
+if (userNumber !== false) gameCore = checkRequest();
 
 if (userNumber !== false && gameCore === true) {
   if (confirm('Поздравляю, Вы угадали!!! Хотели бы сыграть еще?')) theGame();
